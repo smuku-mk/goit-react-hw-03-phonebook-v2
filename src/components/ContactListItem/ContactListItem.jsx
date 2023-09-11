@@ -1,21 +1,19 @@
 import PropTypes from 'prop-types';
 
-export const ContactListItem = ({ contacts, onButtonClick }) => {
+export const ContactListItem = ({ id, name, number, onButtonClick }) => {
   return (
-    <>
-      {contacts.map(contact => (
-        <li key={contact.id}>
-          {contact.name}: {contact.number}{' '}
-          <button type="button" onClick={() => onButtonClick(contact.id)}>
-            Delete
-          </button>
-        </li>
-      ))}
-    </>
+    <li key={id}>
+      {name}: {number}{' '}
+      <button type="button" onClick={() => onButtonClick(id)}>
+        Delete
+      </button>
+    </li>
   );
 };
 
 ContactListItem.propTypes = {
-  contacts: PropTypes.array.isRequired,
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  number: PropTypes.string.isRequired,
   onButtonClick: PropTypes.func.isRequired,
 };

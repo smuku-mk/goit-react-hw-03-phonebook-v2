@@ -1,10 +1,9 @@
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
 
-import { ContactForm } from './ContactForm';
 import { ContactList } from './ContactList';
-import { ContactListItem } from './ContactListItem';
 import { Filter } from './Filter';
+import ContactForm from './ContactForm/ContactForm';
 
 class App extends Component {
   state = {
@@ -22,17 +21,18 @@ class App extends Component {
   componentDidUpdate(prevState) {
     const { contacts } = this.state;
     if (contacts !== prevState.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(contacts));
+      if (contacts.length === 0) {
+        localStorage.removeItem('contacts');
+      } else {
+        localStorage.setItem('contacts', JSON.stringify(contacts));
+      }
     }
   }
 
-  handleSubmit = evt => {
-    evt.preventDefault();
-
+  handleSubmit = data => {
     const { contacts } = this.state;
-    const form = evt.currentTarget;
-    const { name, number } = form.elements;
-    const newContact = { id: nanoid(), name: name.value, number: number.value };
+    const { name, number } = data;
+    const newContact = { id: nanoid(), name: name, number: number };
     const isContactExist = contacts.find(
       contact => contact.name === newContact.name
     );
@@ -42,8 +42,6 @@ class App extends Component {
       : this.setState({
           contacts: [...contacts, newContact],
         });
-
-    form.reset();
   };
 
   handleFilterChange = evt => {
@@ -70,12 +68,10 @@ class App extends Component {
         <ContactForm onSubmit={this.handleSubmit} />
         <h2>Contacts</h2>
         <Filter onChange={this.handleFilterChange} />
-        <ContactList>
-          <ContactListItem
-            contacts={this.handleDisplayContacts()}
-            onButtonClick={this.handleDeleteContact}
-          />
-        </ContactList>
+        <ContactList
+          contacts={this.handleDisplayContacts()}
+          onButtonClick={this.handleDeleteContact}
+        />
       </>
     );
   }
