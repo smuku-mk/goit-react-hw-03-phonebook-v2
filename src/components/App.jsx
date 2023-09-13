@@ -37,11 +37,15 @@ class App extends Component {
       contact => contact.name === newContact.name
     );
 
-    isContactExist
-      ? alert(`${newContact.name} is already in contacts`)
-      : this.setState({
-          contacts: [...contacts, newContact],
-        });
+    if (isContactExist) {
+      alert(`${newContact.name} is already in contacts`);
+      this.setState({ filter: '' });
+    } else {
+      this.setState({
+        contacts: [...contacts, newContact],
+        filter: '',
+      });
+    }
   };
 
   handleFilterChange = evt => {
